@@ -1,0 +1,212 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif}
+
+.header{background:#0000FF;padding:0;overflow:hidden;position:relative}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;position:relative;z-index:2}
+.header-deco{position:absolute;top:-30px;right:-20px;width:200px;height:200px;opacity:.12;z-index:1}
+.header-deco::before{content:'';position:absolute;top:0;right:40px;width:2px;height:200px;background:#fff;transform:rotate(-35deg);transform-origin:top center}
+.header-deco::after{content:'';position:absolute;top:0;right:80px;width:2px;height:200px;background:#fff;transform:rotate(-20deg);transform-origin:top center}
+
+.logo-area{display:flex;align-items:center;gap:6px}
+.logo-wordmark{display:flex;flex-direction:column;line-height:1}
+.logo-five{font-size:26px;font-weight:900;color:#fff;letter-spacing:3px;font-family:Arial,sans-serif}
+.logo-credit{font-size:11px;font-weight:400;color:rgba(255,255,255,.85);letter-spacing:4px;text-transform:lowercase;text-align:center}
+
+.header-text{text-align:right}
+.header-title{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.header-sub{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
+
+.legend-bar{background:#001080;padding:8px 24px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.leg-label{font-size:10px;color:rgba(255,255,255,.5);margin-right:4px;text-transform:uppercase;letter-spacing:.05em}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.85);padding:3px 10px;border-radius:20px;border:0.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08)}
+.leg-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.phases-wrap{padding:16px 20px 8px}
+.phases{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ph{flex:1;min-width:90px;padding:9px 10px;border-radius:14px;cursor:pointer;font-size:11px;font-weight:700;text-align:center;border:2px solid transparent;transition:all .15s;font-family:Arial,sans-serif;text-transform:uppercase;letter-spacing:.04em}
+.ph-count{display:block;font-size:10px;font-weight:400;opacity:.7;margin-bottom:2px;text-transform:none;letter-spacing:0}
+.ph:not(.active){background:#f0f4ff;color:#0000FF;border-color:#d0d8ff}
+.ph:not(.active):hover{background:#dce4ff;border-color:#0000FF}
+.ph.active{background:#0000FF;color:#fff;border-color:#0000FF}
+
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:0 2px}
+.prog-track{flex:1;height:5px;background:#e8ecff;border-radius:5px;overflow:hidden}
+.prog-bar{height:100%;border-radius:5px;background:#0000FF;transition:width .35s}
+.prog-label{font-size:11px;color:#0000FF;font-weight:700;white-space:nowrap;font-family:Arial,sans-serif}
+
+.steps-list{display:flex;flex-direction:column;gap:8px;padding:0 20px 20px}
+
+.step-card{border-radius:14px;overflow:hidden;border:1.5px solid #e0e6ff;transition:border-color .15s;background:#fff}
+.step-card:hover{border-color:#0000FF}
+.step-head{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;background:#f5f7ff}
+.step-card.open .step-head{background:#0000FF}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:#0000FF;color:#fff;font-family:Arial,sans-serif}
+.step-card.open .step-num{background:#fff;color:#0000FF}
+.step-text{flex:1;min-width:0}
+.step-title{font-size:13px;font-weight:700;color:#001060;line-height:1.35;font-family:Arial,sans-serif}
+.step-sub{font-size:11px;color:#5566aa;margin-top:1px}
+.step-card.open .step-title{color:#fff}
+.step-card.open .step-sub{color:rgba(255,255,255,.75)}
+.step-badges{display:flex;flex-wrap:wrap;gap:4px;flex-shrink:0;max-width:175px;justify-content:flex-end}
+.badge{font-size:10px;padding:2px 8px;border-radius:20px;border:0.5px solid;white-space:nowrap;font-family:Arial,sans-serif}
+.b-emp{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.b-cre{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.b-bac{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.b-con{background:#FBEAF0;color:#72243E;border-color:#D4537E}
+.b-com{background:#EEEDFE;color:#3C3489;border-color:#7F77DD}
+.b-dec{background:#FAECE7;color:#4A1B0C;border-color:#D85A30}
+.step-card.open .b-emp,.step-card.open .b-cre,.step-card.open .b-bac,.step-card.open .b-con,.step-card.open .b-com,.step-card.open .b-dec{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff}
+.chev{font-size:10px;color:#0000FF;transition:transform .2s;flex-shrink:0}
+.step-card.open .chev{transform:rotate(180deg);color:#fff}
+
+.step-detail{display:none;padding:12px 14px 14px 52px;border-top:1px solid #e8ecff;background:#fafbff}
+.step-card.open .step-detail{display:block;border-top:1px solid rgba(0,0,255,.1)}
+.detail-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.detail-list li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#334;line-height:1.5;font-family:Arial,sans-serif}
+.detail-dot{width:5px;height:5px;border-radius:50%;background:#0000FF;flex-shrink:0;margin-top:5px}
+.detail-note{font-size:11px;color:#667;margin-top:8px;padding:7px 10px;border-radius:10px;background:#eef0ff;font-family:Arial,sans-serif}
+
+.footer{background:#0000FF;padding:8px 24px;display:flex;align-items:center;justify-content:space-between}
+.footer-copy{font-size:10px;color:rgba(255,255,255,.5);font-family:Arial,sans-serif}
+.footer-brand{font-size:11px;font-weight:900;color:#fff;letter-spacing:3px;font-family:Arial,sans-serif}
+</style>
+
+<div class="header">
+  <div class="header-deco"></div>
+  <div class="header-inner">
+    <div class="logo-area">
+      <div class="logo-wordmark">
+        <div class="logo-five">FIVE</div>
+        <div class="logo-credit">credit</div>
+      </div>
+    </div>
+    <div class="header-text">
+      <div class="header-title">Fluxo de tarefas</div>
+      <div class="header-sub">Processo de candidatura a financiamento · clique num passo para expandir</div>
+    </div>
+  </div>
+</div>
+
+<div class="legend-bar">
+  <span class="leg-label">Intervenientes</span>
+  <span class="leg"><span class="leg-dot" style="background:#85B7EB"></span>Empresa</span>
+  <span class="leg"><span class="leg-dot" style="background:#97C459"></span>Creditscore</span>
+  <span class="leg"><span class="leg-dot" style="background:#EF9F27"></span>Backoffice</span>
+  <span class="leg"><span class="leg-dot" style="background:#D4537E"></span>Contabilista</span>
+  <span class="leg"><span class="leg-dot" style="background:#7F77DD"></span>Compliance</span>
+  <span class="leg"><span class="leg-dot" style="background:#D85A30"></span>Declarante</span>
+</div>
+
+<div class="phases-wrap">
+  <div class="phases" id="phases"></div>
+  <div class="prog-row">
+    <div class="prog-track"><div class="prog-bar" id="progBar" style="width:16.6%"></div></div>
+    <span class="prog-label" id="progLabel">Fase 1 de 6</span>
+  </div>
+</div>
+
+<div class="steps-list" id="stepsList"></div>
+
+<div class="footer">
+  <span class="footer-copy">Five Credit © 2025 · Documento interno</span>
+  <span class="footer-brand">FIVE credit</span>
+</div>
+
+<script>
+const P=[
+  {id:'p1',label:'Registo',steps:[
+    {n:'01',t:'Registo na plataforma',s:'Criar conta de acesso',a:['emp'],items:['Selecionar "Registe-se"','Nome e NIF do representante','Password: 5–20 car., maiúscula, minúscula, número e especial','Aceitar Termos e Privacidade'],note:'Sem ação de backoffice.'},
+    {n:'02',t:'Validação do email',s:'Autenticação por código',a:['emp','cre'],items:['Inserir email do representante','Sistema envia código de validação (até 3 min — verificar SPAM)','Inserir código e validar'],note:'Sem ação de backoffice.'},
+    {n:'03',t:'Validação do telemóvel',s:'Autenticação por SMS',a:['emp','cre'],items:['Inserir número de telemóvel','Sistema envia SMS com código (até 3 min)','Inserir código e validar'],note:'Emails 2 e 3 para alteração de password.'},
+  ]},
+  {id:'p2',label:'Candidatura',steps:[
+    {n:'04',t:'Criação de candidatura',s:'Produto, montante e finalidade',a:['emp','cre'],items:['Escolher produto de financiamento','Escolher montante pretendido','Escolher finalidade(s) de financiamento','Validar e submeter'],note:''},
+    {n:'05',t:'Requisitos da candidatura',s:'Elegibilidade via código CRC',a:['emp','cre'],items:['Introduzir código CRC','Sistema verifica elegibilidade (até 3 min)','Requisitos: faturação ≥ 75k€, ≥ 3 anos de atividade, situação regularizada AT, SS e Justiça'],note:'Email 4 ou 5 com resultado.'},
+    {n:'06',t:'Contabilista — identificação',s:'Dados de contacto do CC',a:['emp','cre'],items:['Nome do Contabilista Certificado (CC)','Número de telefone e email do CC','Sistema envia link seguro ao CC','Avisar o CC que vai receber email da plataforma'],note:'Email 6.'},
+  ]},
+  {id:'p3',label:'Documentos',steps:[
+    {n:'07',t:'CC — upload SAFT',s:'Extração via Five Extractor',a:['con','cre'],items:['CC recebe email e clica no 1.º link','Instalar Five Extractor (Apple ou Microsoft)','Extrair dados e guardar Excel no PC','2.º link → Enviar email com código','Browse → upload dos ficheiros Excel'],note:'Emails 7, 8 e 9.'},
+    {n:'08',t:'Instalar extensão Doc Sync',s:'Recolha automática no Chrome',a:['emp','cre'],items:['Instalar extensão Five Credit Doc Sync','Pop-up: Adicionar extensão','Ícone puzzle → 3 pontos → Gerir extensão','Permitir acesso a URLs de arquivo','Fechar browser e validar extensão'],note:''},
+    {n:'09',t:'Recolha automática — Banco de Portugal',s:'Via extensão',a:['emp','cre'],items:['Site Five Credit: Banco de Portugal','Atualizar extensão → Recolher documentos','Autenticar no site do BDP','Extensão recolhe dados para análise de crédito'],note:''},
+    {n:'10',t:'Recolha manual — Banco de Portugal',s:'Base de Dados de Contas',a:['emp','cre'],items:['Aceder à Base de Dados de Contas','Aceitar condições de acesso à BCB','Autenticar e obter mapa','Repetir para Mapa de Responsabilidades e Restrição de Cheques'],note:'Não alterar nome nem formato dos ficheiros.'},
+    {n:'11',t:'Recolha automática — Segurança Social',s:'Via extensão',a:['emp','cre'],items:['Site Five Credit: Segurança Social','Atualizar extensão → Recolher documentos','Login no site da SS','Extensão recolhe automaticamente'],note:''},
+    {n:'12',t:'Recolha manual — Segurança Social',s:'Declaração de Não Dívida',a:['emp','cre'],items:['Aceder à Declaração de Não Dívida','Login no site da SS → Obter nova declaração','Browse → selecionar documento → Submeter'],note:''},
+    {n:'13',t:'Recolha automática — Autoridade Tributária',s:'Via extensão',a:['emp','cre'],items:['Site Five Credit: Autoridade Tributária','Atualizar extensão → Recolher documentos','Login no site da AT'],note:''},
+    {n:'14',t:'Recolha manual — Autoridade Tributária',s:'Declaração de Não Dívida',a:['emp','cre'],items:['Aceder à Declaração de Não Dívida','Login no site da AT','Certidão de Dívida/Não Dívida → Confirmar','Renomear ficheiro .action → .pdf','Browse → Submeter'],note:'Guardar com "Todos os ficheiros".'},
+    {n:'15',t:'Verificação do processo do CC',s:'Confirmação de upload SAFT',a:['emp','cre'],items:['Confirmar se o CC efetuou o upload','Se não efetuou: reenviar email e aguardar','Se efetuou: avançar para próximo passo'],note:'Emails 8 e 9.'},
+  ]},
+  {id:'p4',label:'Avaliação',steps:[
+    {n:'16',t:'Submeter candidatura',s:'Submissão final',a:['emp'],items:['Confirmar todos os dados','Submeter candidatura','Pop-up: confirmar submissão','Aguardar email de avaliação'],note:''},
+    {n:'16.1',t:'Backoffice — aceitar ou rejeitar',s:'Análise financeira',a:['bac'],items:['Login como Análise Financeira','Selecionar empresa candidata no dashboard','Clicar no lápis','OK → Crédito (inicia simulação)','KO → Rejeitar (email ao candidato)'],note:'Emails 10 ou 11.'},
+    {n:'17',t:'Simulação de crédito',s:'Simulador de crédito',a:['emp','cre'],items:['Clicar no link recebido por email','Login no site Five Credit','Efetuar simulação e calcular plano de pagamentos','Guardar, confirmar e submeter simulação','Aguardar aceitação'],note:'Email 10.'},
+    {n:'17.1',t:'Backoffice — aceitar/rejeitar simulação',s:'Aprovação pelo Board',a:['bac'],items:['Board (2 de 3): aceitar ou rejeitar simulação','Aceitação → inicia processo de RCBE'],note:'Email 12.'},
+  ]},
+  {id:'p5',label:'KYC & RCBE',steps:[
+    {n:'18',t:'RCBE — recolha do documento',s:'Pedido ao Declarante',a:['emp','cre'],items:['Clicar no link recebido por email','Login no site Five Credit','Clicar em Recolher RCBE','Reencaminhar email para o Declarante','Aguardar confirmação de submissão'],note:'Importante: só o Declarante pode submeter.'},
+    {n:'19',t:'RCBE — Declarante',s:'Advogado / Gerente / Administrador',a:['dec','cre'],items:['Clicar no link recebido por email','Preencher informação solicitada','Inserir código de autenticação','Instalar extensão FIVE CREDIT RCBE Sync','Autenticar no site RCBE','Aguardar recolha automática → Concluir'],note:'Emails 13, 14, 15 e 16.'},
+    {n:'19.1',t:'Backoffice — criar estrutura KYC & ESG',s:'Com base em RCBE, CRC e SABI',a:['com','bac'],items:['Compliance cria estrutura KYC','Selecionar fontes (RCBE, CRC, SABI) → Concluir','Confirmar dados de quem responde ao KYC','Iniciar KYC → Submeter'],note:'Email 17.'},
+    {n:'20',t:'KYC & ESG — preenchimento',s:'Empresa preenche questionários',a:['emp'],items:['Clicar no link de preenchimento KYC & ESG','Preencher campos obrigatórios e avalistas','Documentos: certidões AT e SS, IRS, recibos, evidência de património','Submeter KYC e aceitar RGPD'],note:'Emails 17, 18 e 19.'},
+    {n:'20.1',t:'Backoffice — revisão KYC',s:'Compliance verifica documentação',a:['com','bac'],items:['Login em KYC.FiveCredit → Iniciar revisão','Confirmar ou rejeitar dados e documentação','Verificar PEPs e Medidas Restritivas (Dow Jones)','Consultar Base Geral, CIRE e Lista Pública de Execuções','CRC do Banco de Portugal'],note:'Só finalizar após validação dos avalistas.'},
+    {n:'20.2',t:'Procedimento avalistas',s:'Compliance + Análise Financeira',a:['com','bac'],items:['Estandardizar ficheiros: irs_NIF.pdf, imi_NIF.pdf','Enviar por email à análise financeira','Aguardar aprovação com rating A ou B','Arquivar na pasta do avalista'],note:''},
+  ]},
+  {id:'p6',label:'Formalização',steps:[
+    {n:'21',t:'Informação contratual',s:'Dados pré-contratuais',a:['emp','cre'],items:['Clicar no link recebido por email','Confirmar avalistas, representantes e conta bancária','Submeter e sair'],note:'Email 20.'},
+    {n:'21.1',t:'Backoffice — formalização do contrato',s:'Compliance e Board',a:['com','bac'],items:['Confirmar dados e guardar → Submeter','Contrato gerado automaticamente em PDF','Board (2 de 3): aceitar ou rejeitar','Contrato disponível na plataforma'],note:'Email 21.'},
+    {n:'22',t:'Download e upload do contrato',s:'Assinatura e entrega',a:['emp','com'],items:['Empresa recebe email de agendamento','Comparecer com: BI/passaporte, carimbo, ata de aprovação, procuração (se aplicável)','Compliance digitaliza e envia à empresa','Upload: Contrato + Autorização de Débito + Livrança (PDF)'],note:''},
+    {n:'22.1',t:'Backoffice — aprovação final',s:'Candidatura completa',a:['com','bac'],items:['Compliance verifica conformidade dos documentos','Aceder → Aprovar → Confirmar','Candidatura passa ao estado "Completo"','Departamento Financeiro inicia transferência'],note:''},
+    {n:'23',t:'Imposto de Selo',s:'Apuramento mensal',a:['bac'],items:['Apurar: colunas Stamp, Stamp on Loan, Stamp on Fees','Enviar ao Contabilista Certificado (EY)','Confirmar internamente','Guia de pagamento até ao dia 20 do mês seguinte'],note:''},
+    {n:'24',t:'Faturação',s:'Emissão de faturas mensais',a:['bac'],items:['Contratos em curso: Interest e Stamp','Novos contratos: Opening Fee, Stamp on Loan e Stamp on Fee','EY emite e envia até ao dia 5','Suporte envia via finance@fivecredit.pt'],note:''},
+    {n:'25',t:'Débitos diretos',s:'Marathon → Bankinter → Sibs',a:['bac'],items:['Marathon envia informação ao Bankinter (D−5)','Bankinter → Sibs','Email automático com info da 1.ª tentativa de débito','2.ª tentativa: ainda não automatizada'],note:''},
+  ]},
+];
+
+const BC={emp:'b-emp',cre:'b-cre',bac:'b-bac',con:'b-con',com:'b-com',dec:'b-dec'};
+const BL={emp:'Empresa',cre:'Creditscore',bac:'Backoffice',con:'Contabilista',com:'Compliance',dec:'Declarante'};
+let cur='p1';
+
+function ph(){return P.find(x=>x.id===cur)}
+
+function renderPhases(){
+  const idx=P.findIndex(x=>x.id===cur);
+  document.getElementById('progBar').style.width=Math.round((idx+1)/P.length*100)+'%';
+  document.getElementById('progLabel').textContent='Fase '+(idx+1)+' de '+P.length;
+  document.getElementById('phases').innerHTML=P.map(x=>`
+    <div class="ph${x.id===cur?' active':''}" onclick="go('${x.id}')">
+      <span class="ph-count">${x.steps.length} passos</span>${x.label}
+    </div>`).join('');
+}
+
+function renderSteps(){
+  document.getElementById('stepsList').innerHTML=ph().steps.map((s,i)=>`
+    <div class="step-card" id="sc${i}">
+      <div class="step-head" onclick="tog(${i})">
+        <div class="step-num">${s.n}</div>
+        <div class="step-text">
+          <div class="step-title">${s.t}</div>
+          <div class="step-sub">${s.s}</div>
+        </div>
+        <div class="step-badges">${s.a.map(a=>`<span class="badge ${BC[a]}">${BL[a]}</span>`).join('')}</div>
+        <span class="chev" id="chev${i}">▾</span>
+      </div>
+      <div class="step-detail" id="sd${i}">
+        <ul class="detail-list">${s.items.map(it=>`<li><span class="detail-dot"></span>${it}</li>`).join('')}</ul>
+        ${s.note?`<div class="detail-note">${s.note}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function tog(i){
+  const sc=document.getElementById('sc'+i);
+  const sd=document.getElementById('sd'+i);
+  const ch=document.getElementById('chev'+i);
+  const o=sc.classList.toggle('open');
+  sd.style.display=o?'block':'none';
+  ch.style.transform=o?'rotate(180deg)':'';
+}
+
+function go(id){cur=id;renderPhases();renderSteps()}
+
+renderPhases();
+renderSteps();
+</script>
