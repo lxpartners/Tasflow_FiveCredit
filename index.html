@@ -1,0 +1,221 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{font-family:var(--font-sans);font-size:13px}
+.top-bar{display:grid;grid-template-columns:1fr auto;align-items:center;padding:1.25rem 1.5rem 1rem;border-bottom:1.5px solid var(--color-border-secondary)}
+.top-bar h1{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.top-bar p{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.phases-bar{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid var(--color-border-secondary)}
+.ph-tab{padding:10px 6px;text-align:center;font-size:11px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;border-right:0.5px solid var(--color-border-tertiary);transition:background .12s;line-height:1.3;user-select:none}
+.ph-tab:last-child{border-right:none}
+.ph-tab:hover{background:var(--color-background-secondary)}
+.ph-tab.active{color:#fff}
+.ph-tab .ph-num{font-size:10px;font-weight:400;opacity:.8;margin-bottom:2px}
+.ph-progress{height:2px;background:var(--color-border-tertiary)}
+.ph-fill{height:2px;transition:width .3s}
+.table-wrap{width:100%}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+.col-n{width:44px}
+.col-title{width:auto}
+.col-actors{width:160px}
+.col-actors-sm{width:130px}
+thead th{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;padding:8px 12px;border-bottom:1px solid var(--color-border-secondary);background:var(--color-background-secondary);text-align:left}
+thead th:first-child{text-align:center;border-right:0.5px solid var(--color-border-tertiary)}
+thead th:last-child{border-left:0.5px solid var(--color-border-tertiary)}
+tbody tr{border-bottom:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--color-background-secondary)}
+tbody tr.open{background:var(--color-background-secondary)}
+.td-n{text-align:center;padding:10px 8px;border-right:0.5px solid var(--color-border-tertiary);vertical-align:top}
+.td-title{padding:10px 12px;vertical-align:top}
+.td-actors{padding:10px 12px;border-left:0.5px solid var(--color-border-tertiary);vertical-align:top}
+.step-label{font-size:13px;font-weight:500;color:var(--color-text-primary);line-height:1.4}
+.step-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px}
+.num-circle{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin:0 auto}
+.actors-cell{display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;border:0.5px solid;white-space:nowrap;line-height:1.5}
+.b-emp{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.b-cre{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.b-bac{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.b-con{background:#FBEAF0;color:#72243E;border-color:#D4537E}
+.b-com{background:#EEEDFE;color:#3C3489;border-color:#7F77DD}
+.b-dec{background:#FAECE7;color:#4A1B0C;border-color:#D85A30}
+@media(prefers-color-scheme:dark){
+  .b-emp{background:#042C53;color:#B5D4F4;border-color:#185FA5}
+  .b-cre{background:#173404;color:#C0DD97;border-color:#3B6D11}
+  .b-bac{background:#412402;color:#FAC775;border-color:#BA7517}
+  .b-con{background:#4B1528;color:#F4C0D1;border-color:#993556}
+  .b-com{background:#26215C;color:#CECBF6;border-color:#534AB7}
+  .b-dec{background:#4A1B0C;color:#F5C4B3;border-color:#993C1D}
+}
+.detail-row{display:none}
+.detail-row.open{display:table-row}
+.detail-cell{padding:0 12px 12px 56px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-secondary)}
+.detail-cell.merged{padding:0}
+.detail-inner{padding:10px 12px 12px 12px;border-left:2px solid;border-radius:0}
+.detail-steps{list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.detail-steps li{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.detail-steps li::before{content:'';width:4px;height:4px;border-radius:50%;flex-shrink:0;margin-top:6px;background:var(--color-border-primary)}
+.detail-note{font-size:11px;color:var(--color-text-tertiary);margin-top:6px;padding-top:6px;border-top:0.5px solid var(--color-border-tertiary)}
+.chevron{font-size:10px;color:var(--color-text-tertiary);margin-left:auto;transition:transform .15s;display:inline-block;flex-shrink:0}
+.open-row .chevron{transform:rotate(180deg)}
+.title-flex{display:flex;align-items:flex-start;gap:6px}
+.empty-state{padding:2rem;text-align:center;color:var(--color-text-tertiary);font-size:13px}
+</style>
+
+<div class="wrap">
+<div class="top-bar">
+  <div>
+    <h1>Five Credit — Fluxo de tarefas</h1>
+    <p>Candidatura a financiamento empresarial · clique numa linha para expandir</p>
+  </div>
+  <div class="legend-row">
+    <div class="leg"><div class="leg-dot" style="background:#185FA5"></div>Empresa</div>
+    <div class="leg"><div class="leg-dot" style="background:#3B6D11"></div>Creditscore</div>
+    <div class="leg"><div class="leg-dot" style="background:#BA7517"></div>Backoffice</div>
+    <div class="leg"><div class="leg-dot" style="background:#72243E"></div>Contabilista</div>
+    <div class="leg"><div class="leg-dot" style="background:#3C3489"></div>Compliance</div>
+    <div class="leg"><div class="leg-dot" style="background:#993C1D"></div>Declarante</div>
+  </div>
+</div>
+
+<div class="phases-bar" id="phasesBar"></div>
+<div class="ph-progress"><div class="ph-fill" id="phFill"></div></div>
+
+<div class="table-wrap">
+  <table id="mainTable">
+    <thead>
+      <tr>
+        <th class="col-n">#</th>
+        <th class="col-title">Passo</th>
+        <th class="col-actors">Intervenientes</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+</div>
+
+<script>
+const phases=[
+  {id:'p1',label:'Registo',short:'Reg.',color:'#534AB7',accent:'#EEEDFE',steps:[
+    {n:'01',title:'Registo na plataforma',sub:'Criar conta de acesso',actors:['emp'],steps:['Selecionar "Registe-se"','Nome e NIF do representante da empresa','Password: 5–20 car., maiúscula, minúscula, número e especial','Aceitar Termos e Privacidade'],note:'Sem ação de backoffice.'},
+    {n:'02',title:'Validação do email',sub:'Autenticação do email',actors:['emp','cre'],steps:['Inserir email do representante','Sistema envia código de validação (até 3 min — verificar SPAM)','Inserir código recebido e validar'],note:'Sem ação de backoffice.'},
+    {n:'03',title:'Validação do telemóvel',sub:'Autenticação por SMS',actors:['emp','cre'],steps:['Inserir número de telemóvel','Sistema envia SMS com código (até 3 min)','Inserir código e validar'],note:'Emails 2 e 3 usados para alteração de password.'},
+  ]},
+  {id:'p2',label:'Candidatura',short:'Cand.',color:'#0F6E56',accent:'#E1F5EE',steps:[
+    {n:'04',title:'Criação de candidatura',sub:'Escolha do produto e montante',actors:['emp','cre'],steps:['Escolher produto de financiamento','Escolher montante pretendido','Escolher finalidade(s) de financiamento','Validar e submeter'],note:''},
+    {n:'05',title:'Requisitos da candidatura',sub:'Verificação de elegibilidade via CRC',actors:['emp','cre'],steps:['Introduzir código CRC','Sistema verifica elegibilidade (até 3 min)','Requisitos: faturação ≥ 75k€, ≥ 3 anos de atividade, situação regularizada AT, SS e Justiça'],note:'Email 4 ou 5 com resultado.'},
+    {n:'06',title:'Contabilista certificado — identificação',sub:'Dados de contacto do CC',actors:['emp','cre'],steps:['Nome do Contabilista Certificado (CC)','Número de telefone e email do CC','Sistema envia email ao CC com link seguro','Avisar o CC que vai receber email da plataforma'],note:'Email 6.'},
+  ]},
+  {id:'p3',label:'Documentos',short:'Docs.',color:'#993C1D',accent:'#FAECE7',steps:[
+    {n:'07',title:'CC — upload de informação SAFT',sub:'Five Extractor',actors:['con','cre'],steps:['CC recebe email e clica no 1.º link','Instalar Five Extractor (Apple ou Microsoft)','Abrir, extrair dados e guardar Excel no PC','Clicar 2.º link → Enviar email com código','Browse → upload dos ficheiros Excel','CC recebe email de confirmação'],note:'Emails 7, 8 e 9.'},
+    {n:'08',title:'Instalar extensão Doc Sync',sub:'Recolha automática Chrome',actors:['emp','cre'],steps:['Instalar extensão Five Credit Doc Sync no Chrome','Pop-up: Adicionar extensão','Ícone puzzle → 3 pontos → Gerir extensão','Permitir acesso a URLs de arquivo','Fechar browser e validar extensão no site Five Credit'],note:''},
+    {n:'09',title:'Recolha automática — Banco de Portugal',sub:'Via extensão',actors:['emp','cre'],steps:['Site Five Credit: Banco de Portugal','Atualizar extensão → Recolher documentos','Autenticar no site do BDP','Extensão recolhe dados para análise de crédito'],note:''},
+    {n:'10',title:'Recolha manual — Banco de Portugal',sub:'Base de Dados de Contas',actors:['emp','cre'],steps:['Aceder à Base de Dados de Contas','Aceitar condições de acesso à BCB','Autenticar e obter mapa','Repetir para Mapa de Responsabilidades e Restrição de Cheques'],note:'Não alterar nome nem formato dos ficheiros.'},
+    {n:'11',title:'Recolha automática — Segurança Social',sub:'Via extensão',actors:['emp','cre'],steps:['Site Five Credit: Segurança Social','Atualizar extensão → Recolher documentos','Login no site da SS','Extensão recolhe automaticamente'],note:''},
+    {n:'12',title:'Recolha manual — Segurança Social',sub:'Declaração de Não Dívida',actors:['emp','cre'],steps:['Aceder à Declaração de Não Dívida','Login no site da SS → Obter nova declaração','Browse → selecionar documento → Submeter'],note:''},
+    {n:'13',title:'Recolha automática — Autoridade Tributária',sub:'Via extensão',actors:['emp','cre'],steps:['Site Five Credit: Autoridade Tributária','Atualizar extensão → Recolher documentos','Login no site da AT'],note:''},
+    {n:'14',title:'Recolha manual — Autoridade Tributária',sub:'Declaração de Não Dívida',actors:['emp','cre'],steps:['Aceder à Declaração de Não Dívida','Login no site da AT','Certidão de Dívida/Não Dívida → Confirmar','Renomear ficheiro de .action para .pdf','Guardar com "Todos os ficheiros" → Browse → Submeter'],note:''},
+    {n:'15',title:'Verificação do processo do CC',sub:'Confirmação de upload SAFT',actors:['emp','cre'],steps:['Confirmar se o CC efetuou o upload do SAFT','Se não efetuou: reenviar email e aguardar','Se efetuou: avançar para próximo passo'],note:'Emails 8 e 9.'},
+  ]},
+  {id:'p4',label:'Avaliação',short:'Aval.',color:'#185FA5',accent:'#E6F1FB',steps:[
+    {n:'16',title:'Submeter candidatura',sub:'Submissão final',actors:['emp'],steps:['Confirmar todos os dados','Submeter candidatura','Pop-up: confirmar submissão','Aguardar email de avaliação da candidatura'],note:''},
+    {n:'16.1',title:'Backoffice — aceitar ou rejeitar',sub:'Análise financeira',actors:['bac'],steps:['Login como Análise Financeira','Selecionar empresa candidata no dashboard','Clicar no lápis','OK: clicar "Crédito" → inicia simulação','KO: clicar "Rejeitar" → email ao candidato'],note:'Emails 10 ou 11.'},
+    {n:'17',title:'Simulação de crédito',sub:'Simulador de crédito',actors:['emp','cre'],steps:['Clicar no link recebido por email','Login no site Five Credit','Aceder ao Simulador de Crédito','Efetuar simulação e calcular plano de pagamentos','Guardar, confirmar e submeter simulação','Aguardar aceitação da simulação'],note:'Email 10.'},
+    {n:'17.1',title:'Backoffice — aceitar/rejeitar simulação',sub:'Aprovação pelo Board',actors:['bac'],steps:['Board (2 de 3): aceitar ou rejeitar simulação','Aceitação → inicia processo de RCBE'],note:'Email 12.'},
+  ]},
+  {id:'p5',label:'KYC & RCBE',short:'KYC',color:'#854F0B',accent:'#FAEEDA',steps:[
+    {n:'18',title:'RCBE — recolha do documento',sub:'Pedido ao Declarante',actors:['emp','cre'],steps:['Clicar no link recebido por email','Login no site Five Credit','Clicar em Recolher RCBE','Reencaminhar email para o Declarante','Aguardar confirmação de submissão'],note:'Importante: só o Declarante pode submeter o RCBE.'},
+    {n:'19',title:'RCBE — Declarante',sub:'Advogado/Gerente/Administrador',actors:['dec','cre'],steps:['Clicar no link recebido por email','Preencher informação solicitada','Aguardar código de autenticação e inserir','Instalar extensão FIVE CREDIT RCBE Sync no Chrome','Autenticar no site RCBE','Aguardar recolha automática → Concluir e fechar'],note:'Emails 13, 14, 15 e 16.'},
+    {n:'19.1',title:'Backoffice — criar estrutura KYC & ESG',sub:'Com base em RCBE, CRC e SABI',actors:['com','bac'],steps:['Compliance cria estrutura KYC','Selecionar fontes (RCBE, CRC, SABI) → Concluir','Pop-up: dados de quem responde ao KYC','Confirmar e gerar processo KYC','Iniciar KYC → Submeter'],note:'Email 17.'},
+    {n:'20',title:'KYC & ESG — preenchimento',sub:'Empresa preenche questionários',actors:['emp'],steps:['Clicar no link de preenchimento KYC & ESG','Preencher campos obrigatórios incluindo avalistas','Documentos: certidões AT e SS, IRS, recibos de vencimento, evidência de património','Submeter KYC e aceitar RGPD'],note:'Emails 17, 18 e 19.'},
+    {n:'20.1',title:'Backoffice — revisão KYC',sub:'Compliance verifica documentação',actors:['com','bac'],steps:['Login em KYC.FiveCredit → Iniciar revisão','Confirmar ou rejeitar dados e documentação','Verificar PEPs e Medidas Restritivas (Dow Jones)','Consultar Base Geral, CIRE e Lista Pública de Execuções','CRC do Banco de Portugal'],note:'Só finalizar KYC após validação dos avalistas.'},
+    {n:'20.2',title:'Procedimento avalistas',sub:'Compliance + Análise Financeira',actors:['com','bac'],steps:['Estandardizar ficheiros: irs_NIF.pdf, imi_NIF.pdf','Enviar por email à análise financeira','Aguardar aprovação com rating A ou B','Arquivar email na pasta do avalista'],note:''},
+  ]},
+  {id:'p6',label:'Formalização',short:'Form.',color:'#993556',accent:'#FBEAF0',steps:[
+    {n:'21',title:'Informação contratual',sub:'Confirmação de dados pré-contratuais',actors:['emp','cre'],steps:['Clicar no link recebido por email','Confirmar dados de avalistas, representantes e conta bancária','Submeter e sair'],note:'Email 20.'},
+    {n:'21.1',title:'Backoffice — formalização do contrato',sub:'Compliance e Board',actors:['com','bac'],steps:['Confirmar dados e guardar → Submeter','Contrato gerado automaticamente em PDF','Board (2 de 3): aceitar ou rejeitar contrato','Contrato fica disponível na plataforma'],note:'Email 21.'},
+    {n:'22',title:'Download e upload do contrato',sub:'Assinatura e entrega',actors:['emp','com'],steps:['Empresa recebe email de agendamento','Comparecer com: documento de identificação, carimbo da empresa, ata de aprovação, procuração (se aplicável)','Compliance digitaliza documentação assinada e envia à empresa','Empresa faz upload: Contrato + Autorização de Débito + Livrança (PDF)'],note:''},
+    {n:'22.1',title:'Backoffice — aprovação final',sub:'Candidatura completa',actors:['com','bac'],steps:['Compliance verifica conformidade dos documentos','Aceder à candidatura → Aprovar → Confirmar','Candidatura passa ao estado "Completo"','Departamento Financeiro inicia transferência'],note:''},
+    {n:'23',title:'Imposto de Selo',sub:'Apuramento mensal',actors:['bac'],steps:['Apurar valor: colunas Stamp, Stamp on Loan e Stamp on Fees','Enviar para Contabilista Certificado (EY)','Confirmar internamente','Envio de guia até ao dia 20 do mês seguinte'],note:''},
+    {n:'24',title:'Faturação',sub:'Emissão de faturas mensais',actors:['bac'],steps:['Contratos em curso: colunas Interest e Stamp','Novos contratos: Opening Fee, Stamp on Loan e Stamp on Fee','EY emite faturas e envia até ao dia 5 do mês seguinte','Suporte envia faturas via finance@fivecredit.pt'],note:''},
+    {n:'25',title:'Débitos diretos',sub:'Marathon → Bankinter → Sibs',actors:['bac'],steps:['Marathon envia informação ao Bankinter (D−5)','Bankinter → Sibs','Plataforma envia email automático com info da 1.ª tentativa de débito','2.ª tentativa: ainda não automatizada'],note:''},
+  ]},
+];
+
+const bmap={emp:'b-emp',cre:'b-cre',bac:'b-bac',con:'b-con',com:'b-com',dec:'b-dec'};
+const blabel={emp:'Empresa',cre:'Creditscore',bac:'Backoffice',con:'Contabilista',com:'Compliance',dec:'Declarante'};
+
+let active='p1';
+
+function renderPhases(){
+  const bar=document.getElementById('phasesBar');
+  bar.innerHTML=phases.map(p=>`
+    <div class="ph-tab${p.id===active?' active':''}" style="${p.id===active?'background:'+p.color:''}" onclick="setPhase('${p.id}')">
+      <div class="ph-num">${p.steps.length} passos</div>
+      ${p.label}
+    </div>`).join('');
+  const idx=phases.findIndex(p=>p.id===active);
+  const pct=Math.round((idx+1)/phases.length*100);
+  const ph=phases.find(p=>p.id===active);
+  document.getElementById('phFill').style.width=pct+'%';
+  document.getElementById('phFill').style.background=ph.color;
+}
+
+function renderTable(){
+  const ph=phases.find(p=>p.id===active);
+  const tb=document.getElementById('tbody');
+  let html='';
+  ph.steps.forEach((s,i)=>{
+    html+=`<tr class="main-row" id="mr-${i}" onclick="toggle(${i})">
+      <td class="td-n">
+        <div class="num-circle" style="background:${ph.accent};color:${ph.color}">${s.n}</div>
+      </td>
+      <td class="td-title">
+        <div class="title-flex">
+          <div style="flex:1">
+            <div class="step-label">${s.title}</div>
+            <div class="step-sub">${s.sub}</div>
+          </div>
+          <span class="chevron" id="chev-${i}">▾</span>
+        </div>
+      </td>
+      <td class="td-actors">
+        <div class="actors-cell">${s.actors.map(a=>`<span class="badge ${bmap[a]}">${blabel[a]}</span>`).join('')}</div>
+      </td>
+    </tr>
+    <tr class="detail-row" id="dr-${i}">
+      <td colspan="3" style="padding:0;background:var(--color-background-secondary)">
+        <div style="padding:10px 12px 12px 56px;border-left:3px solid ${ph.color};margin-left:0">
+          <ul class="detail-steps">${s.steps.map(st=>`<li>${st}</li>`).join('')}</ul>
+          ${s.note?`<div class="detail-note">${s.note}</div>`:''}
+        </div>
+      </td>
+    </tr>`;
+  });
+  tb.innerHTML=html;
+}
+
+function toggle(i){
+  const mr=document.getElementById('mr-'+i);
+  const dr=document.getElementById('dr-'+i);
+  const ch=document.getElementById('chev-'+i);
+  const open=dr.classList.contains('open');
+  dr.classList.toggle('open',!open);
+  mr.classList.toggle('open-row',!open);
+  ch.style.transform=open?'':'rotate(180deg)';
+}
+
+function setPhase(id){
+  active=id;
+  renderPhases();
+  renderTable();
+}
+
+renderPhases();
+renderTable();
+</script>
